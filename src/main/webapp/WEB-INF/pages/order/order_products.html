@@ -1,0 +1,167 @@
+<div class="row">
+	<div class="col-xs-12">
+		<div class="box">
+			<div class="box-header">
+				<h3 class="box-title">已选择的订单</h3>
+			</div>
+			<div class="box-body table-responsive no-padding">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>id</th>
+							<th>订单号</th>
+							<th>订单状态</th>
+							<th>下单用户id</th>
+							<th>用户名</th>
+							<th>手机号</th>
+							<th>地址</th>
+							<th>下单时间</th>
+							<th>总价</th>
+						</tr>
+					</thead>
+					<tbody id="tbodyId"></tbody>
+				</table>
+			</div>
+		</div>
+		<!-- ################################################# -->
+		<div class="box">
+			<div class="box-header">
+				<h3 class="box-title">订单包含的商品</h3>
+			</div>
+			<div class="box-body table-responsive no-padding">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>商品id</th>
+							<th>商品名称</th>
+							<th>商品描述</th>
+							<th>商品数量</th>
+							<th>商品单价</th>
+							<th>合计价格</th>
+						</tr>
+					</thead>
+					<tbody id="tbodyIdProduct"></tbody>
+				</table>
+			</div>
+		</div>
+		<!-- ################################################# -->
+	</div>
+</div>
+<script type="text/javascript">
+
+/* $(function(){
+	console.log("程序运行到了商品列表(list/recovery)界面");
+}); */
+	
+   $(document).ready(function(){
+	   
+	   console.log("数据流程运行到了--订单列表(子)界面");
+	   //1. 显示订单条目
+	   doSetTableBodyRows();
+	   
+	   //2. 显示商品列表+商品数量
+	   doSetTableProductList();
+	   
+   });
+   
+   //获取商品表信息
+   function doSetTableProductList(){
+	   var data = $("#mainContentId").data("dataOrder");
+	   //params
+	   var params={"id":data.id};
+	   //url
+	   var url = "order/doFindProductList.do";
+	   
+	   $.getJSON(url,params,function(result){
+		   console.log("result",result);
+		   if(result.state==1){
+			   doShowProductList(result.data);
+		   }else{
+			  alert(result.message);
+		   }
+	   });
+    }
+   
+    function doShowProductList(data){
+      //1.获取tbody对象，并清空内容
+  	  var tBody=$("#tbodyIdProduct");
+  	  tBody.empty();
+  	  //2.迭代data内容将数据追加到tbody中
+  	  for(var i in data){
+  		 var tr=$("<tr></tr>");
+  		 var tds=createProductTds(data[i]);
+  		 tr.append(tds);
+  		 tBody.append(tr);
+  	  }
+    }
+    
+    function createProductTds(data){
+    	var tds = 
+			"<td>"+data.id+"</td>"+
+			"<td>"+data.name+"</td>"+
+			"<td>"+data.describes+"</td>"+
+			"<td>"+data.number+"</td>"+
+			"<td>"+data.price+"</td>"+
+			"<td>"+data.totalPrices+"</td>";
+		return tds;	
+    }
+    
+   //*********************************************
+   
+   //通过服务端返回的数据初始化页面
+   function doSetTableBodyRows(){
+	   var data = $("#mainContentId").data("dataOrder");
+	   //1.获取tbody对象，并清空内容
+	   var tBody=$("#tbodyId");
+	   tBody.empty();
+	   //2.迭代data内容将数据追加到tbody中
+	   var tr=$("<tr></tr>");
+	   var tds=createTds(data);
+	   tr.append(tds);
+	   tBody.append(tr);
+   }
+   function createTds(data){
+		var tds = 
+			"<td>"+data.id+"</td>"+
+			"<td>"+data.number+"</td>"+
+			"<td>"+data.type+"</td>"+
+			"<td>"+data.userId+"</td>"+
+			"<td>"+data.userName+"</td>"+
+			"<td>"+data.phone+"</td>"+
+			"<td>"+data.addr+"</td>"+
+			"<td>"+data.orderTime+"</td>"+
+			"<td>"+data.totalPrices+"</td>";
+		return tds;	
+	}
+   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,161 @@
+<!-- Horizontal Form -->
+ <div class="box box-info">
+      <div class="box-header with-border">
+        <h3 class="box-title">商品添加菜单</h3>
+      </div>
+      <!-- /.box-header -->
+      <!-- form start -->
+        <div class="box-body">
+          
+          <!-- ################################################### -->
+          
+          <div class="form-group">
+            <label for="nameId" class="col-sm-2 control-label">商品名称</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control"  id="ProductNameId" placeholder="例如:羽毛球、足球">
+            </div>
+          </div>
+          
+          <!-- ################################################### -->
+          
+          <div class="form-group">
+            <label for="urlId" class="col-sm-2 control-label">商品价格</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control"  id="ProductPriceId" placeholder="例如:12、15.5">
+            </div>
+          </div>
+          
+          <!-- ################################################### -->
+          
+          <div class="form-group">
+            <label for="urlId" class="col-sm-2 control-label">库存</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control"  id="ProductStockId" placeholder="例如:12、15">
+            </div>
+          </div>
+          
+		  <!-- ################################################### -->
+		  
+		  <div class="form-group">
+				<label for="sortId" class="col-sm-2 control-label">属性</label>
+				<div class="col-sm-10">
+					<input type="text" id="ProductTypeId" placeholder="例如:体育用品。。。"
+						class="form-control">
+				</div>
+		 </div>
+		 
+		 <!-- ################################################### -->
+		  
+		  <div class="form-group">
+				<label for="sortId" class="col-sm-2 control-label">描述</label>
+				<div class="col-sm-10">
+					<input type="text" id="ProductDescribeId" placeholder="商品的描述信息"
+						class="form-control">
+				</div>
+		 </div>
+		 
+		 <!-- ################################################### -->
+		  
+		  <div class="form-group">
+				<label for="sortId" class="col-sm-2 control-label">备注</label>
+				<div class="col-sm-10">
+					<input type="text" id="ProductNoteId" placeholder="请输入备注"
+						class="form-control">
+				</div>
+		 </div>
+		 
+        </div>
+		<!-- ################################################### -->
+        
+        <!-- /.box-body -->
+        <div class="box-footer">
+          <button type="button" class="btn btn-default btn-cancel">返回</button>
+          <button type="button" class="btn btn-info pull-right btn-save">保存</button>
+        </div>
+        
+  </div>
+  <script type="text/javascript" src="bower_components/ztree/jquery.ztree.all.min.js"></script>
+  <script type="text/javascript" src="bower_components/layer/layer.js">
+  </script>
+ <script type="text/javascript">
+
+  $(function(){
+	  console.log("数据流程运行到了--商品(添加/修改)界面");
+	  
+	  //1. 填充数据(修改界面)
+	  var data = $(".box-title").data("data");
+	  if(data){
+		  doGetObject(data);
+	  }
+	  
+	  //2. 生成点击事件(返回/提交)
+	  $(".box-footer")
+		  .on("click",".btn-cancel",doCancel)
+		  .on("click",".btn-save",doSaveOrUpdate);
+	  
+  });
+  
+  function doSaveOrUpdate(){
+	  //1.获取表单数据
+	  var params = doGetEditFormData();
+	  
+	  var data = $(".box-title").data("data");
+	  if(data){	//修改提交表单的时候要添加id属性
+		  params.id = data.id;
+	  }
+	  
+	  //2.定义url
+		var insertUrl = "product/doSaveObject.do";
+		var updateUrl = "product/doUpdateObject.do";
+		var url = data ? updateUrl : insertUrl;
+		//3.异步提交数据
+		$.post(url, params, function(result) {
+			if (result.state == 1) {
+				alert(result.message);
+				doCancel();
+			} else {
+				alert(result.message);
+			}
+		});
+  }
+  
+  function doGetEditFormData() {
+		var params = {
+			name  	 : $("#ProductNameId").val(),
+			price 	 : $("#ProductPriceId").val(),
+			stock 	 : $("#ProductStockId").val(),
+			type  	 : $("#ProductTypeId").val(),
+			describes: $("#ProductDescribeId").val(),
+			note  	 : $("#ProductNoteId").val()
+		}
+		return params;
+	}
+  
+  
+  function doCancel() {
+		$("#mainContentId").load("product/doProductListUI.do", function() {
+			$("#mainContentId").removeData();
+			$("#mainContentId").data("display",1); 
+		})
+	}
+  
+  function doGetObject(data){
+	  console.log("数据流程运行到了--添加修改条目");
+	  $("#ProductNameId").val(data.name);
+	  $("#ProductPriceId").val(data.price);
+	  $("#ProductStockId").val(data.stock);
+	  $("#ProductTypeId").val(data.type);
+	  $("#ProductDescribeId").val(data.describes);
+	  $("#ProductNoteId").val(data.note);
+  }
+  
+ </script>
+    
+    
+    
+    
+    
+    
+    
+    
+    

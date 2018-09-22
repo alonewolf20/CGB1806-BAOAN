@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jt.product.dao.ProductDao">
+	
+	<!-- 配置全局name -->
+	<sql id="name">
+        <if test="name!=null and name !=''">
+           and name like concat("%",#{name},"%")
+        </if>
+     </sql>
+     
+     <!-- 查询当前页所有条目 -->
+     <select id="findPageObjects" 
+            resultType="com.jt.product.entity.Product">
+       select * 
+       from product 
+       where display=#{display} 
+       <include refid="name"/>
+       order by id
+       limit #{startIndex},#{pageSize}
+    </select>
+    
+    <!-- 查询总条目数 -->
+    <select id="getRowCount" resultType="int">
+           select count(*) from product
+           where display=#{display}
+           <include refid="name"/>
+    </select>
+    
+    <!-- 根据id修改display标记(0/1) -->
+    <update id="updateDisplay">
+		update product set display=#{display} where id=#{id}
+	</update>
+	
+	<!-- 基于id修改商品信息 -->
+		<update id="updateObject" parameterType="com.jt.product.entity.Product">
+         update product
+         set
+           name=#{name},
+           price=#{price},
+           stock=#{stock},
+           type=#{type},
+           describes=#{describes},
+           note=#{note}
+         where id=#{id}
+	</update>
+	
+	<insert id="insertObject" parameterType="com.jt.product.entity.Product">
+         insert into product
+         (name,price,stock,type,describes,note,display)
+         values
+         (#{name},#{price},#{stock},#{type},#{describes},#{note},#{display})
+    </insert>
+    
+    <!-- 根据id查询所有商品信息 -->
+    <select id="findObjectById" parameterType="com.jt.product.entity.Product">
+    	select * from product 
+    	where id in
+    	<foreach collection="ids"
+                 open="("
+                 close=")"
+                 separator=","
+                 item="item">
+               #{item}
+        </foreach>
+    </select>
+    
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
